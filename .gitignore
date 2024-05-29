@@ -1,0 +1,27 @@
+/.idea/
+/work_dirs*
+.vscode/
+/tmp
+/data
+/checkpoints
+*.so
+*.patch
+__pycache__/
+*.egg-info/
+/viz*
+/submit*
+build/
+*.pyd
+/cache*
+/debug
+/gaussian-splatting
+/dist
+/premodel
+*.stl
+*.pth
+*.jpg
+# *.png
+/venv/
+/mmgeneration*
+/lib/models/deformers/smplx/SMPLX
+/icon

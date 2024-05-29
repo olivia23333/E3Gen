@@ -1,0 +1,296 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+  
+
+<!-- End : Google Analytics Code -->
+<script type="text/javascript" src="../js/hidebib.js"></script>
+<!-- <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'> -->
+<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'> -->
+<link href='https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro' rel='stylesheet' type='text/css'>
+  
+<head>
+    <title>E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation</title>
+    <meta property="og:description" content="$E^{3}$Gen: Efficient, Expressive and Editable Avatars Generation"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6HHDEXF452"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6HHDEXF452');
+</script>
+
+</head>
+
+
+ <body>
+<div class="container">
+    <div class="paper-title">
+      <h1><span class="red">E<sup>3</sup></span>Gen: <span class="brown">E</span>fficient, <span class="green">E</span>xpressive and <span class="darkblue">E</span>ditable Avatars Generation</h1>
+    </div>
+  
+
+    
+    <div id="authors">
+        <div class="author-row">
+            <div class="col-5 text-center">Weitian Zhang<sup>1</sup></div>
+            <div class="col-5 text-center"><a href="https://daodaofr.github.io/">Yichao Yan</a><sup>1</sup></div>
+            <div class="col-5 text-center">Yunhui Liu<sup>2</sup></div>
+            <div class="col-5 text-center">Xingdong Sheng<sup>2</sup></div>
+            <div class="col-5 text-center"><a href="https://scholar.google.com/citations?user=yDEavdMAAAAJ&hl=zh-CN">Xiaokang Yang</a><sup>1</sup></div>
+        </div>
+
+<!--         <div class="affil-row">
+            <div class="col-2 text-center"><sup>1</sup><a href="https://en.sjtu.edu.cn/">Shanghai Jiao Tong University</a></div>
+            <div class="col-2 text-center"><sup>2</sup>Alibaba</a></div>
+        </div> -->
+        <table align=center width="50%">
+            <tr>
+            <td colspan="1">
+                <sup>1</sup>Shanghai Jiao Tong University
+            </td>
+            <td colspan="1">
+                <sup>2</sup>Lenovo Research
+            </td>
+            </tr>
+        </table>
+      
+      <!-- <h4>(ACMMM 2024 submmited)</h4> -->
+
+<!--         <div style="clear: both">
+            <div class="paper-btn-parent">
+            <a class="supp-btn" href="https://openaccess.thecvf.com/content/CVPR2023/papers/Wu_GANHead_Towards_Generative_Animatable_Neural_Head_Avatars_CVPR_2023_paper.pdf">
+              <image src="assets/paper_icon.png" height="55px">
+              <h5><strong>Paper</strong></h5>
+            </a>
+            <a class="supp-btn" href="https://github.com/wsj-sjtu/GANHead">
+              <image src="assets/github_icon.png" height="55px">
+              <h5><strong>Code</strong></h5>
+            </a>
+            <a class="supp-btn" href="assets/bib.txt">
+                <span class="material-icons"> description </span>
+                  BibTeX
+            </a>
+        </div></div> -->
+
+        <table align=center width="50%">
+            <tr>
+            <td colspan="1">
+                <a href="" target="_blank">
+                    <div style="text-align: center;">
+                    <image src="assets/paper_icon.png" height="55px" style="display: block; margin: 0 auto; margin-bottom: 10px;">
+                    <h5><strong>Arxiv</strong></h5>
+                </div>
+                </a>
+            </td>
+            <!-- <td colspan="1">
+                <a href="https://github.com/wsj-sjtu/GANHead" target="_blank">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<image src="assets/github_icon.png" height="55px">
+                    <h5><strong>Code</strong></h5>
+                </a>
+            </td> -->
+            <td colspan="1">
+                <a href="" target="_blank">
+                    <div style="text-align: center;">
+                    <image src="assets/github_icon.png" height="55px" style="display: block; margin: 0 auto; margin-bottom: 10px;">
+                    <h5><strong>Code</strong></h5>
+                </div>
+                </a>
+            </td>
+            <!-- <td colspan="1">
+                <a href="" target="_blank">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp<image src="assets/youtube_icon.png" height="55px">
+                    <h5><strong>Video</strong></h5>
+                </a>
+            </td> -->
+            </tr>
+         </table>
+      
+    </div>
+
+    <section id="teaser">
+        <a href="assets/teaser3.pdf">
+            <img width="100%" src="assets/teaser3.pdf">
+        </a>
+        <p align=center class="caption"> Our novel method, <strong>E<sup>3</sup>Gen</strong>, demonstrates its capability of generating high-fidelity avatars 
+            with detailed cloth wrinkles and achieves a rendering resolution of 1024<sup>2</sup> in real time. Furthermore, our method offers comprehensive control 
+            over camera views, and full-body poses, and supports attribute transfer and local editing.
+        </p>
+    </section>
+
+    <section id="abstract"/>
+        <h2>Abstract</h2>
+        <hr/>
+
+        <p> This paper aims to introduce 3D Gaussian for efficient, expressive, and editable digital avatar generation.
+            This task faces two major challenges: (1) The unstructured nature of 3D Gaussian makes it incompatible with 
+            current generation pipelines; (2) the expressive animation of 3D Gaussian in a generative setting that involves 
+            training with multiple subjects remains unexplored. In this paper, we propose a novel avatar generation method 
+            named <strong>E<sup>3</sup>Gen</strong>, to effectively address these challenges. First, we propose a novel generative UV features plane 
+            representation that encodes unstructured 3D Gaussian onto a structured 2D UV space defined by the SMPL-X parametric model. 
+            This novel representation not only preserves the representation ability of the original 3D Gaussian but also introduces a 
+            shared structure among subjects to enable generative learning of the diffusion model. To tackle the second challenge, 
+            we propose a part-aware deformation module to achieve robust and accurate full-body expressive pose control. Extensive 
+            experiments demonstrate that our method achieves superior performance in avatar generation and enables expressive 
+            full-body pose control and editing.
+            </p>
+    </section>
+    
+    
+    <section id="Demo Video">
+        <h2>Full Video</h2>
+        <hr/>
+        <figure style="width: 100%;">
+            <video class="centered" width="100%" controls muted loop autoplay>
+                <source src="assets/MM_2024_3821_supp_video.mp4" type="video/mp4">
+            </video>
+            <!-- <p class="caption">The demo video shows avatar generation and animation results(controled by SMPL), followed by the latent code interpolation results. -->
+            <!-- </p> -->
+        </figure>
+        <hr/>
+    </section>
+   
+   
+    <section id="method">
+        <h2>Method Overview</h2>
+        <hr/>
+        <figure style="width: 100%;">
+            <a href="assets/method.pdf">
+                <img width="100%" src="assets/method.pdf">
+            </a>
+            <p>
+                Our approach utilizes a single-stage diffusion model to simultaneously train the denoising and fitting process. 
+                The UV features plane, x<sub>i</sub>, is randomly initialized and optimized by both processes. In the denoising process, 
+                noise is added to the UV features plane and then denoised following a v-parameterization scheme using a denoising UNet. 
+                In the fitting process, the UV features plane is decoded into Gaussian Attribute maps, which are used to generate a 
+                3D-Gaussian-based avatar in canonical space by fetching the corresponding attributes for the initialized Gaussian 
+                primitive. Finally, a part-aware deformation module is employed to deform the avatar into targeted pose based on SMPL-X parameters.
+            </p>
+        </figure>
+   
+    </section>
+   
+
+    <section id="Results">
+        <!-- <h2>Application</h2> -->
+        <!-- <hr/>
+        <h3>Face Reenactment</h3>
+        <figure style="width: 80%;">
+            <video class="centered" width="100%" controls muted loop autoplay>
+                <source src="assets/reenactment.mp4" type="video/mp4">
+            </video>
+        </figure>
+        <p class="caption"> We estimate the FLAME parameters of the sourse video, and use the estimated pose and expression parameters to animate the generated head avatars. 
+                                The generated avatars can fully reproduce FLAME's poses and expressions.
+        </p>
+        <br/>
+        <hr/> -->
+      
+        <h2>Random Generation</h2>
+        <figure style="width: 80%;">
+            <video class="centered" width="100%" controls muted loop autoplay>
+                <source src="assets/random_gen.mp4" type="video/mp4">
+            </video>
+        </figure>
+        <p class="caption"> Our method can generate digital avatars with complex appearance and rich details, clearly exhibiting fingers and clothing wrinkles.
+        </p>
+
+        <h2>Novel Pose Animation</h2>
+        <figure style="width: 80%;">
+            <video class="centered" width="100%" controls muted loop autoplay>
+                <source src="assets/animation.mp4" type="video/mp4">
+            </video>
+        </figure>
+        <p class="caption"> Our method exhibit robustly animation results to these challenging novel poses.
+        </p>
+
+        <h2>Editing</h2>
+        <figure style="width: 80%;">
+            <video class="centered" width="100%" controls muted loop autoplay>
+                <source src="assets/editing.mp4" type="video/mp4">
+            </video>
+        </figure>
+        <p class="caption"> Our method enables local editing and partial attribute transfer. The edited results also support pose control.
+        </p>
+    </section>
+
+    <!-- <section id="Other Results">
+        <h2>Other Results</h2>
+        <hr/>
+        <table align=center width="100%">
+            <tr>
+            <td colspan="4">
+                <h3>Sample Latent Codes</h3>
+            </td>
+            <td colspan="5">
+                <h3>Raw Scan Fitting</h3>
+            </td>
+            </tr>
+          
+            <tr>
+            <td colspan="2">
+                <center>
+                <video width=150px controls muted loop autoplay>
+                    <source src="assets/shape_code.mp4" type="video/mp4">
+                </video>
+            </center>
+            </td>
+            <td colspan="2">
+                <center>
+                <video width=150px controls muted loop autoplay>
+                    <source src="assets/detail_code.mp4" type="video/mp4">
+                </video>
+                </center>
+            </td>
+            <td colspan="5">
+                <center>
+                <a href="assets/multiface_fitting.png">
+                    <img width=640px src="assets/multiface_fitting.png">
+                </a>
+                </center>
+            </td>
+            </tr>
+        </table>
+        <p class="caption"> We also train our model on a subset of Multiface datase. Since Multiface datase has less detail and noise in the hair region, 
+                            our model can learn more details of the facial region and achieve better fitting results.
+        </p>
+        <hr/>
+    </section> -->
+
+    <section class="section" id="bibtex">
+      <h2>Citation</h2>
+      <div style="overflow-x:auto;">
+<!--         <hr/> -->
+        <pre style="background-color: #e9eeef;padding: 1.25em 1.5em"><code>
+@inproceedings{zhang2024e3gen,
+  title={$E^{3}$Gen: Efficient, Expressive and Editable Avatars Generation},
+  author={Zhang, weitian and Yan, Yichao and Liu, Yunhui and Sheng, Xingdong and Yang, Xiaokang},
+  booktitle={Arxiv},
+  year={2024}
+}
+        </code></pre>
+      </div>
+    </section>
+
+    <!-- <section id="paper">
+        <h2>Paper</h2>
+        <hr/>
+        <figure style="width: 100%;">
+            <a href="https://arxiv.org/pdf/2304.03950.pdf">
+                <img width="100%" src="assets/paper.png">
+            </a>
+        </figure>
+        <hr/>
+    </section> -->
+
+</div>
+</body>
+</html>

@@ -223,3 +223,11 @@ This project is built upon many amazing works:
 - [StyleGAN2-ADA](https://github.com/NVlabs/stylegan2-ada-pytorch) for perceptual loss
 
 ## Citation
+```
+@article{zhang2024e3gen,
+    title={$E^{3}$Gen: Efficient, Expressive and Editable Avatars Generation}, 
+    author={Weitian Zhang and Yichao Yan and Yunhui Liu and Xingdong Sheng and Xiaokang Yang},
+    year={2024},
+    journal={arXiv preprint arXiv:2405.19203},
+}
+```

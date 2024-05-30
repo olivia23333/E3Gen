@@ -3,7 +3,7 @@
 
 <img src="assets/teaser.png" /> 
 
-Official PyTorch implementation of paper: [*E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation*]().
+Official PyTorch implementation of paper: [*E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation*](http://arxiv.org/abs/2405.19203).
 
 ## Getting Started
 

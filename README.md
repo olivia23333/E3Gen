@@ -1,5 +1,5 @@
 # E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation
-## [Paper]() | [Project Page](https://olivia23333.github.io/E3Gen/)
+## [Arxiv](http://arxiv.org/abs/2405.19203) | [Project Page](https://olivia23333.github.io/E3Gen/)
 
 <img src="assets/teaser.png" /> 
 

@@ -333,7 +333,7 @@ class UVNDecoder(VolumeRenderer):
                        vmin=code_range[0], vmax=code_range[1])
 
     def forward(self, code, grid_size, smpl_params, cameras, num_imgs,
-                dt_gamma=0, perturb=False, T_thresh=1e-4, return_loss=False, return_norm=False, init=False, mask=None):
+                dt_gamma=0, perturb=False, T_thresh=1e-4, return_loss=False, return_norm=False, return_viz=False, init=False, mask=None):
         """
         Args:
             rays_o: Shape (num_scenes, num_rays_per_scene, 3)
@@ -412,13 +412,15 @@ class UVNDecoder(VolumeRenderer):
                     image_single, _, viz_masks, _ = self.gaussian_render(pcd_single, sigmas_single, rgbs_single, normal_single, R_def_single, 1, num_imgs, camera_single, use_scale=True, radius=radius_single, mask=mask_single)
                     image.append(image_single)
             else:
-                # viz_masks = []
+                viz_masks = [] if return_viz else None
                 for camera_single, R_def_single, pcd_single, rgbs_single, sigmas_single, normal_single, radius_single in zip(cameras, R_def_batch, xyzs, rgbs, sigmas, normals, radius):
-                    image_single, _, viz_mask, _ = self.gaussian_render(pcd_single, sigmas_single, rgbs_single, normal_single, R_def_single, 1, num_imgs, camera_single, use_scale=True, radius=radius_single, return_viz=False)
+                    image_single, _, viz_mask, _ = self.gaussian_render(pcd_single, sigmas_single, rgbs_single, normal_single, R_def_single, 1, num_imgs, camera_single, use_scale=True, radius=radius_single, return_viz=return_viz)
                     image.append(image_single)
-                    # viz_masks.append(viz_mask)
-                # viz_masks = torch.cat(viz_masks, dim=0)
-                viz_masks = None
+                    if return_viz:
+                        viz_masks.append(viz_mask)
+                if return_viz:
+                    viz_masks = torch.cat(viz_masks, dim=0)
+                # viz_masks = None
             image = torch.cat(image, dim=0)
 
             results = dict(

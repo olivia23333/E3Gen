@@ -130,7 +130,7 @@ def load_smpl(path, smpl_type='smplx'):
         else:
             assert False
 
-    with open(os.path.join(os.path.split(path)[0][:-5], 'pose', '000_000.json'), 'rb') as f:
+    with open(os.path.join(os.path.split(path)[0], '000_000.json'), 'rb') as f:
         tf_param = json.load(f)
     
     if smpl_type=='smpl':
@@ -285,20 +285,16 @@ def main():
         })
 
         # load points data
-        pcd_map = torch.as_tensor(np.load('/home/zhangweitian/HighResAvatar/work_dirs/cache/init_posmap_smplx_thu.npy')).cuda() # 1, 3, 256, 256
+        pcd_map = torch.as_tensor(np.load('work_dirs/cache/init_posmap_smplx_thu.npy')).cuda() # 1, 3, 256, 256
         pcd_map_re = pcd_map.permute(0, 2, 3, 1).reshape(1, -1, 3).cuda()
         # load_data_path
-        data_latent_code = torch.load('/home/zhangweitian/HighResAvatar/work_dirs/ssdnerf_avatar_uncond_16bit_thuman_conv_final/viz_uncond_code/scene_0225.pth')
-        # data_latent_code = torch.load('/home/zhangweitian/HighResAvatar/work_dirs/ssdnerf_avatar_uncond_16bit_thuman_conv_final/viz_uncond_code/scene_0002.pth')
+        data_latent_code = torch.load('demo/edit_exp/scene_0225.pth')
         geo_code = torch.nn.parameter.Parameter(data_latent_code[:16], requires_grad=False)
         tex_code = torch.nn.parameter.Parameter(data_latent_code[16:], requires_grad=True)
         code = [geo_code.unsqueeze(0).cuda(), tex_code.unsqueeze(0).cuda()]
-        test_cam_path = '/home/zhangweitian/HighResAvatar/data/humanscan_wbg/human_train/0021/pose/340_001.json'
-        test_smpl_path = '/home/zhangweitian/HighResAvatar/data/humanscan_wbg/human_train/0021/smplx/smplx_param.pkl'
-        target_image_path = '/home/zhangweitian/HighResAvatar/edit/tar6.png'
-        # test_cam_path = '/home/zhangweitian/HighResAvatar/data/humanscan_wbg/human_train/0005/pose/160_001.json'
-        # test_smpl_path = '/home/zhangweitian/HighResAvatar/data/humanscan_wbg/human_train/0005/smplx/smplx_param.pkl'
-        # target_image_path = '/home/zhangweitian/HighResAvatar/edit/tar5.png'
+        test_cam_path = 'demo/edit_exp/340_001.json'
+        test_smpl_path = 'demo/edit_exp/smplx_param.pkl'
+        target_image_path = 'demo/edit_exp/tar.png'
         # load pose data
         with open(test_cam_path, 'rb') as f:
             pose_param = json.load(f)
@@ -316,7 +312,7 @@ def main():
         img = Image.open(target_image_path)
         img = np.asarray(img.resize((1024,1024), resample=Image.Resampling.LANCZOS))[:,:,:3]
         target_image = torch.from_numpy(img.astype(np.float32) / 255).unsqueeze(0).unsqueeze(1).cuda()
-        # plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/edit_viz', 'target.jpg'), torch.round(target_image[0,0] * 255).to(torch.uint8).cpu().numpy())
+        # plt.imsave(os.path.join('demo/edit_viz', 'target.jpg'), torch.round(target_image[0,0] * 255).to(torch.uint8).cpu().numpy())
         # assert False
         # training setup
         # optimizer = torch.optim.Adam([tex_code,], lr=0.02)
@@ -341,10 +337,9 @@ def main():
             visible_points = decoder.init_pcd[viz_mask]
             dist_sq, idx, neighbors = ops.knn_points(pcd_map_re, visible_points.unsqueeze(0), K=1, return_nn=True)
             viz_uv = (dist_sq < 0.0001)[0]
-            # viz_uv = viz_uv.unsqueeze(0).reshape(1, 256, 256, -1)
             viz_uv = viz_uv.reshape(256, 256)
             # viz_uv_re = (viz_uv * 255).to(torch.uint8).cpu().numpy()
-            # plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/edit_viz', 'viz_uv_2.jpg'), viz_uv_re)
+            # plt.imsave(os.path.join('demo/edit_viz', 'viz_uv_2.jpg'), viz_uv_re)
             # assert False
 
         progress_bar = tqdm(range(100), desc="Training progress")
@@ -363,13 +358,12 @@ def main():
             tex_code.grad[:, ~viz_uv] = 0
             optimizer.step()
             with torch.no_grad():
-                # if i % 10 == 0:
                 progress_bar.set_postfix({"Loss": f"{loss.item():.{7}f}"})
                 progress_bar.update(1)
             
         # save 360 degree rendering results
         with torch.no_grad():
-            cam_poses = load_pose('/home/zhangweitian/HighResAvatar/data/cam_36.json')
+            cam_poses = load_pose('demo/cam_36.json')
             view_poses = cam_poses[0].unsqueeze(0).cuda()
             view_intrinsics = cam_poses[1].unsqueeze(0).cuda()
             view_images, _ = model.module.render(
@@ -377,9 +371,9 @@ def main():
             
             pred_imgs = view_images.clamp(min=0, max=1).reshape(36, h, w, 3)
             output_viz = torch.round(pred_imgs * 255).to(torch.uint8).cpu().numpy()
+            os.makedirs(os.path.join('demo/edit_exp/results'), exist_ok=True)
             for i in range(36):
-                plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/edit_viz', str(i)+'.jpg'), output_viz[i])
-
+                plt.imsave(os.path.join('demo/edit_exp/results', str(i)+'.jpg'), output_viz[i])
 
     return
 

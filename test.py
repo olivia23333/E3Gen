@@ -7,6 +7,7 @@ if 'OMP_NUM_THREADS' not in os.environ:
 import sys
 import argparse
 import socket
+import importlib
 from contextlib import closing
 
 
@@ -23,6 +24,7 @@ def parse_args():
         type=int,
         nargs='+',
         help='ids of gpus to use')
+    parser.add_argument('--mode', type=str, default='test', choices=['test', 'animate', 'edit', 'transfer', 'viz', 'fit'], help='choice the inference mode you want')
     parser.add_argument('--seed', type=int, help='random seed')
     parser.add_argument(
         '--deterministic',
@@ -52,10 +54,17 @@ def main():
     else:
         gpu_ids = [0]
     os.environ['CUDA_VISIBLE_DEVICES'] = ','.join([str(i) for i in gpu_ids])
+
+    mode = args.mode
     if len(gpu_ids) == 1:
-        import tools.test
+        module_name = f"tools.{mode}"
+        module = importlib.import_module(module_name)
+        # import tools.test
         sys.argv = [''] + args_to_str(args)
-        tools.test.main()
+
+        main_func = getattr(module, 'main')
+        main_func()
+        # tools.test.main()
     else:
         from torch.distributed import launch
         for port in range(29500, 65536):
@@ -66,7 +75,8 @@ def main():
         sys.argv = ['',
                     '--nproc_per_node={}'.format(len(gpu_ids)),
                     '--master_port={}'.format(port),
-                    './tools/test.py'
+                    # './tools/test.py'
+                    './tools/{}.py'.format(mode)
                     ] + args_to_str(args) + ['--launcher', 'pytorch', '--diff_seed']
         launch.main()
 

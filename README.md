@@ -208,6 +208,18 @@ Model checkpoints will be saved into `./work_dirs`. UV features plane for scans 
 ```bash
 # For /PATH/TO/CONFIG, we use configs/ssdnerf_avatar_uncond_thuman_conv_16bit.py here
 python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 
+
+# For novel view synthesis (We provide 36 novel views)
+python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'viz'
+
+# For animation (We use the motion file from the AMASS dataset, if you want to run this code, please download the CMU data from the AMASS dataset and put it in ./demo/ani_exp/ani_file)
+python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'animate'
+
+# For attribute transfer(upper cloth and pants)
+python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'transfer'
+
+# For local texture editing
+python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'edit'
 ```
 The trained model can be downloaded from [here](https://drive.google.com/file/d/1bklHperCiTS-_KXDusIre1zq8GL-ulW2/view?usp=sharing) for testing.
 

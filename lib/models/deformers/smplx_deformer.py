@@ -42,6 +42,21 @@ class SMPLXDeformer(torch.nn.Module):
                                 num_pca_comps=12,
                                 num_betas=10,
                                 flat_hand_mean=False,)
+
+        self.body_model_45 = SMPLX('lib/models/deformers/smplx/SMPLX', gender=gender, \
+                                create_body_pose=False, \
+                                create_betas=False, \
+                                create_global_orient=False, \
+                                create_transl=False,
+                                create_expression=False,
+                                create_jaw_pose=False,
+                                create_leye_pose=False,
+                                create_reye_pose=False,
+                                create_right_hand_pose=False,
+                                create_left_hand_pose=False,
+                                use_pca=False,
+                                num_betas=10,
+                                flat_hand_mean=True,)
         
         self.deformer = ForwardDeformer()
         
@@ -128,6 +143,7 @@ class SMPLXDeformer(torch.nn.Module):
 
     def prepare_deformer(self, smpl_params=None, num_scenes=1, device=None):
         # smpl_params = None
+        hand_45 = False
         if smpl_params is None:
             smpl_params = torch.zeros((num_scenes, 120)).to(device)
             scale, global_orient, pose, betas, left_hand_pose, right_hand_pose, jaw_pose, leye_pose, reye_pose, expression = torch.split(smpl_params, [1, 3, 63, 10, 12, 12, 3, 3, 3, 10], dim=1)
@@ -153,20 +169,41 @@ class SMPLXDeformer(torch.nn.Module):
             }
             
         else:
-            scale, transl, global_orient, pose, betas, left_hand_pose, right_hand_pose, jaw_pose, leye_pose, reye_pose, expression = torch.split(smpl_params, [1, 3, 3, 63, 10, 12, 12, 3, 3, 3, 10], dim=1)
-            smpl_params = {
-                'betas': betas.reshape(-1, 10),
-                'expression': expression.reshape(-1, 10),
-                'body_pose': pose.reshape(-1, 63),
-                'left_hand_pose': left_hand_pose.reshape(-1, 12),
-                'right_hand_pose': right_hand_pose.reshape(-1, 12),
-                'jaw_pose': jaw_pose.reshape(-1, 3),
-                'leye_pose': leye_pose.reshape(-1, 3),
-                'reye_pose': reye_pose.reshape(-1, 3),
-                'global_orient': global_orient.reshape(-1, 3),
-                'transl': transl.reshape(-1, 3),
-                'scale': scale.reshape(-1, 1)
-            }
+            if smpl_params.shape[1] == 175: # smpl_params from amass
+                hand_45 = True
+                global_orient, pose, left_hand_pose, right_hand_pose, jaw_pose, leye_pose, reye_pose, betas = torch.split(smpl_params, [3, 63, 45, 45, 3, 3, 3, 10], dim=1)
+                expression = torch.zeros(num_scenes, 10).to(device).float()
+                transl = torch.as_tensor([[0., 0.35, 0.],]).to(device).repeat(num_scenes, 1).float()
+                scale = torch.as_tensor([[1.,],]).to(device).repeat(num_scenes, 1).float()
+                # global_orient = torch.as_tensor([[0., 0., 0.],]).to(device).repeat(num_scenes, 1).float()
+                smpl_params = {
+                    'betas': betas.reshape(-1, 10),
+                    'expression': expression.reshape(-1, 10),
+                    'body_pose': pose.reshape(-1, 63),
+                    'left_hand_pose': left_hand_pose.reshape(-1, 45),
+                    'right_hand_pose': right_hand_pose.reshape(-1, 45),
+                    'jaw_pose': jaw_pose.reshape(-1, 3),
+                    'leye_pose': leye_pose.reshape(-1, 3),
+                    'reye_pose': reye_pose.reshape(-1, 3),
+                    'global_orient': global_orient.reshape(-1, 3),
+                    'transl': transl.reshape(-1, 3),
+                    'scale': scale.reshape(-1, 1)
+                }
+            else:
+                scale, transl, global_orient, pose, betas, left_hand_pose, right_hand_pose, jaw_pose, leye_pose, reye_pose, expression = torch.split(smpl_params, [1, 3, 3, 63, 10, 12, 12, 3, 3, 3, 10], dim=1)
+                smpl_params = {
+                    'betas': betas.reshape(-1, 10),
+                    'expression': expression.reshape(-1, 10),
+                    'body_pose': pose.reshape(-1, 63),
+                    'left_hand_pose': left_hand_pose.reshape(-1, 12),
+                    'right_hand_pose': right_hand_pose.reshape(-1, 12),
+                    'jaw_pose': jaw_pose.reshape(-1, 3),
+                    'leye_pose': leye_pose.reshape(-1, 3),
+                    'reye_pose': reye_pose.reshape(-1, 3),
+                    'global_orient': global_orient.reshape(-1, 3),
+                    'transl': transl.reshape(-1, 3),
+                    'scale': scale.reshape(-1, 1)
+                }
         
         device = smpl_params["betas"].device
         
@@ -177,7 +214,10 @@ class SMPLXDeformer(torch.nn.Module):
             self.initialize(smpl_params["betas"])
             self.initialized = True
     
-        smpl_outputs = self.body_model(**smpl_params)
+        if hand_45:
+            smpl_outputs = self.body_model_45(**smpl_params)
+        else:
+            smpl_outputs = self.body_model(**smpl_params)
         
         self.smpl_outputs = smpl_outputs
         

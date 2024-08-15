@@ -130,7 +130,7 @@ def load_smpl(path, smpl_type='smplx'):
         else:
             assert False
 
-    with open(os.path.join(os.path.split(path)[0][:-5], 'pose', '000_000.json'), 'rb') as f:
+    with open(os.path.join(os.path.split(path)[0], '000_000.json'), 'rb') as f:
         tf_param = json.load(f)
     
     if smpl_type=='smpl':
@@ -285,13 +285,13 @@ def main():
         })
 
         # load points data
-        cloth_mask = torch.as_tensor(np.load('/home/zhangweitian/HighResAvatar/work_dirs/cache/cloth_mask_thu.npy')).unsqueeze(0).cuda()
-        pants_mask = torch.as_tensor(np.load('/home/zhangweitian/HighResAvatar/work_dirs/cache/pants_mask_thu.npy')).unsqueeze(0).cuda()
-        latent_code_a = torch.load('/home/zhangweitian/HighResAvatar/work_dirs/ssdnerf_avatar_uncond_16bit_thuman_conv_final/viz_uncond/scene_0183.pth')
-        latent_code_b = torch.load('/home/zhangweitian/HighResAvatar/work_dirs/ssdnerf_avatar_uncond_16bit_thuman_conv_final/viz_uncond/scene_0345.pth')
-        latent_code_c = torch.load('/home/zhangweitian/HighResAvatar/work_dirs/ssdnerf_avatar_uncond_16bit_thuman_conv_final/viz_uncond/scene_0371.pth')
+        cloth_mask = torch.as_tensor(np.load('demo/transfer_exp/cloth_mask_thu.npy')).unsqueeze(0).cuda()
+        pants_mask = torch.as_tensor(np.load('demo/transfer_exp/pants_mask_thu.npy')).unsqueeze(0).cuda()
+        latent_code_a = torch.load('demo/transfer_exp/scene_0183.pth') # base person
+        latent_code_b = torch.load('demo/transfer_exp/scene_0345.pth') # provide upper cloth
+        latent_code_c = torch.load('demo/transfer_exp/scene_0371.pth') # provide pants
         decoder = model.module.decoder_ema
-        pcd_map = torch.as_tensor(np.load('/home/zhangweitian/HighResAvatar/work_dirs/cache/init_posmap_smplx_thu.npy')).cuda() # 1, 3, 256, 256
+        pcd_map = torch.as_tensor(np.load('work_dirs/cache/init_posmap_smplx_thu.npy')).cuda() # 1, 3, 256, 256
         pcd_map_re = pcd_map.permute(0, 2, 3, 1).reshape(1, -1, 3).cuda()
         cloth_points = decoder.init_pcd[cloth_mask]
         dist_sq, idx, neighbors = ops.knn_points(pcd_map_re, cloth_points.unsqueeze(0), K=1, return_nn=True)
@@ -303,7 +303,7 @@ def main():
         # latent_code_a = latent_code_a.unsqueeze(0)
         # rows, cols = torch.nonzero(cloth_uv[80:, :], as_tuple=True)
         # cloth_uv_viz = (cloth_uv * 255).to(torch.uint8).cpu().numpy()
-        # plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/edit_viz', 'cloth_uv_new.jpg'), cloth_uv_viz)
+        # plt.imsave(os.path.join('demo/transfer_exp/result', 'cloth_uv_new.jpg'), cloth_uv_viz)
 
 
         pants_points = decoder.init_pcd[pants_mask]
@@ -313,18 +313,18 @@ def main():
         pants_uv[22:, :159] = False
         latent_code_a[:, pants_uv] = latent_code_c[:, pants_uv]
         latent_code_a = latent_code_a.unsqueeze(0)
-        pants_uv_viz = (pants_uv * 255).to(torch.uint8).cpu().numpy()
-        plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/edit_viz', 'pants_uv.jpg'), pants_uv_viz)
+        # pants_uv_viz = (pants_uv * 255).to(torch.uint8).cpu().numpy()
+        # plt.imsave(os.path.join('demo/transfer_exp/result', 'pants_uv.jpg'), pants_uv_viz)
 
 
-        test_smpl_path = '/home/zhangweitian/HighResAvatar/data/humanscan_wbg/human_train/0223/smplx/smplx_param.pkl'
+        test_smpl_path = 'demo/transfer_exp/smplx_param.pkl' # from scan 0223
         test_smpl_param = load_smpl(test_smpl_path).unsqueeze(0).cuda()
         cfg = model.module.test_cfg
         h, w = cfg['img_size']
             
         # # save 360 degree rendering results
         with torch.no_grad():
-            cam_poses = load_pose('/home/zhangweitian/HighResAvatar/data/cam_36.json')
+            cam_poses = load_pose('demo/cam_36.json')
             view_poses = cam_poses[0].unsqueeze(0).cuda()
             view_intrinsics = cam_poses[1].unsqueeze(0).cuda()
             view_images, _ = model.module.render(
@@ -332,9 +332,9 @@ def main():
             
             pred_imgs = view_images.clamp(min=0, max=1).reshape(36, h, w, 3)
             output_viz = torch.round(pred_imgs * 255).to(torch.uint8).cpu().numpy()
+            os.makedirs('demo/transfer_exp/trans_viz', exist_ok=True)
             for i in range(36):
-                plt.imsave(os.path.join('/home/zhangweitian/HighResAvatar/trans_viz', str(i)+'.jpg'), output_viz[i])
-
+                plt.imsave(os.path.join('demo/transfer_exp/trans_viz', str(i)+'.jpg'), output_viz[i])
 
     return
 

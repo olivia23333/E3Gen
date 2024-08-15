@@ -163,15 +163,15 @@ def viz_3d(model, dataloader, metrics=None,
     log_vars = dict()
     batch_size_list = []
     # sampling fake images and directly send them to metrics
-    viz_step = 1
-    path = 'data/cam_36.json'
+    # viz_step = 1
+    path = 'demo/cam_36.json'
     cam_poses = load_pose(path)
     for i, data in enumerate(dataloader):
         sample_kwargs_ = deepcopy(sample_kwargs)
         if viz_dir is not None and i % viz_step == 0:
             sample_kwargs_.update(viz_dir=viz_dir)
-        data['cond_poses'] = cam_poses[0].unsqueeze(0).repeat(4, 1, 1, 1)
-        data['cond_intrinsics'] = cam_poses[1].unsqueeze(0).repeat(4, 1, 1)
+        data['test_poses'] = cam_poses[0].unsqueeze(0).repeat(batch_size, 1, 1, 1)
+        data['test_intrinsics'] = cam_poses[1].unsqueeze(0).repeat(batch_size, 1, 1)
         outputs_dict = model.val_step(
             data, show_pbar=rank == 0,
             **sample_kwargs_)
@@ -218,27 +218,27 @@ def animate_3d(model, dataloader, metrics=None,
     log_vars = dict()
     batch_size_list = []
     # sampling fake images and directly send them to metrics
-    viz_step = 1
-    # path = '/home/zhangweitian/HighResAvatar/data/cam_36.json'
-    # cam_poses = load_pose(path)
+    # viz_step = 1
     # amass
-    smplx_path = 'ani_file/CMU/06/06_13_stageii.npz'
+    smplx_path = 'demo/ani_exp/ani_file/CMU/06/06_13_stageii.npz'
     smplx_pose_param = np.load(smplx_path, allow_pickle=True)
-    # with open(smplx_path, "rb") as file:
-    #     smplx_pose_param = pickle.load(file)
     smplx_param = np.concatenate([smplx_pose_param['poses'][:, :3], smplx_pose_param['pose_body'], smplx_pose_param['pose_hand'], smplx_pose_param['pose_jaw'], smplx_pose_param['pose_eye']], axis=1)
-    # smplx_param = np.concatenate([smplx_pose_param['global_orient'][:,0], smplx_pose_param['body_pose_axis'], smplx_pose_param['left_hand_pose'], smplx_pose_param['right_hand_pose'], smplx_pose_param['jaw_pose']+np.array([0.05, 0, 0]), smplx_pose_param['leye_pose'], smplx_pose_param['reye_pose']], axis=1)
-    # smplx_param = torch.as_tensor(smplx_param[:500])
-    smplx_param = torch.as_tensor(smplx_param[100:200])
+    # Select 500 poses from given motion sequence
+    smplx_param = torch.as_tensor(smplx_param[:500]) #(4905, 165)
     # pose_body, pose_hand, pose_jaw, pose_eye
+
+    # rotation matrix
+    rotmat = torch.as_tensor([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
     for i, data in enumerate(dataloader):
         sample_kwargs_ = deepcopy(sample_kwargs)
         if viz_dir is not None and i % viz_step == 0:
             sample_kwargs_.update(viz_dir=viz_dir)
-        data['cond_poses'] = data['cond_poses'][:, 31:32]
-        data['cond_intrinsics'] = data['cond_intrinsics'][:, 31:32]
-        betas = data['cond_smpl_param'][:, 70:80].unsqueeze(1).expand(-1, 50, -1).float()
-        data['cond_smpl_param'] = torch.cat((smplx_param.unsqueeze(0).expand(4, -1, -1)[:, 0::2].to(betas.device).float(), betas), 2)
+        device = data['test_poses'].device
+        test_poses = torch.bmm(data['test_poses'][:, 43], rotmat.unsqueeze(0).expand(batch_size, -1, -1).to(device).float()).unsqueeze(1)
+        data['test_poses'] = test_poses
+        data['test_intrinsics'] = data['test_intrinsics'][:, 43:44]
+        betas = data['test_smpl_param'][:, 70:80].unsqueeze(1).expand(-1, 50, -1).float()
+        data['test_smpl_param'] = torch.cat((smplx_param.unsqueeze(0).expand(batch_size, -1, -1)[:, 0::10].to(device).float(), betas), 2)
         outputs_dict = model.val_step(
             data, show_pbar=rank == 0,
             **sample_kwargs_)

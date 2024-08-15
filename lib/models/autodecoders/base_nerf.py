@@ -495,7 +495,7 @@ class BaseNeRF(nn.Module):
         cameras = torch.cat([intrinsics, poses.reshape(num_scenes, num_imgs, -1)], dim=-1)
         outputs = decoder(
             code, self.grid_size, smpl_params, cameras,
-            num_imgs, mask=mask, dt_gamma=dt_gamma, perturb=False)
+            num_imgs, mask=mask, dt_gamma=dt_gamma, perturb=False, return_viz=return_viz)
         out_image = outputs['image']
         out_vizmask = outputs['viz_masks']
         
@@ -528,6 +528,8 @@ class BaseNeRF(nn.Module):
             test_poses = data['test_poses']
             test_smpl_param = data['test_smpl_param']
         num_scenes, num_imgs, _, _ = test_poses.size()
+        if len(test_smpl_param.size()) == 3:
+            num_imgs = test_smpl_param.size()[1]
         if 'test_imgs' in data and not cfg.get('skip_eval', False):
             test_imgs = data['test_imgs']  # (num_scenes, num_imgs, h, w, 3)
             _, _, h, w, _ = test_imgs.size()

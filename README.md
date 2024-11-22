@@ -222,6 +222,7 @@ python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'transfe
 python test.py /PATH/TO/CONFIG /PATH/TO/CHECKPOINT --gpu-ids 0 1 --mode 'edit'
 ```
 The trained model can be downloaded from [here](https://drive.google.com/file/d/1bklHperCiTS-_KXDusIre1zq8GL-ulW2/view?usp=sharing) for testing.
+Example `.pth` files can be download from [here](https://drive.google.com/file/d/1EXBueuArrSDpZ95lGd8TOztCYZ_cUSxA/view?usp=share_link) for `transfer` and `edit` mode.
 
 Codes for editing and novel pose animation will be updated soon.
 

@@ -237,10 +237,13 @@ This project is built upon many amazing works:
 
 ## Citation
 ```
-@article{zhang2024e3gen,
-    title={$E^{3}$Gen: Efficient, Expressive and Editable Avatars Generation}, 
-    author={Weitian Zhang and Yichao Yan and Yunhui Liu and Xingdong Sheng and Xiaokang Yang},
-    year={2024},
-    journal={arXiv preprint arXiv:2405.19203},
+@inproceedings{zhang2024e3gen,
+    author = {Zhang, Weitian and Yan, Yichao and Liu, Yunhui and Sheng, Xingdong and Yang, Xiaokang},
+    title = {E3Gen: Efficient, Expressive and Editable Avatars Generation},
+    year = {2024},
+    booktitle = {Proceedings of the 32nd ACM International Conference on Multimedia},
+    pages = {6860–6869},
+    numpages = {10},
+    series = {MM '24}
 }
 ```

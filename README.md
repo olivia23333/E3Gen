@@ -1,9 +1,10 @@
 # E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation
-## [Arxiv](http://arxiv.org/abs/2405.19203) | [Project Page](https://olivia23333.github.io/E3Gen/)
+## [Paper](https://dl.acm.org/doi/10.1145/3664647.3681409) | [Arxiv](http://arxiv.org/abs/2405.19203) | [Project Page](https://olivia23333.github.io/E3Gen/)
 
 <img src="assets/teaser.png" /> 
 
 Official PyTorch implementation of paper: [*E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation*](http://arxiv.org/abs/2405.19203).
+Our new work [Disentangled Clothed Avatar Generation with Layered Representation](https://olivia23333.github.io/LayerAvatar/) is currently on Arxiv, code is coming soon.
 
 ## Getting Started
 

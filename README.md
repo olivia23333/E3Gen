@@ -4,7 +4,8 @@
 <img src="assets/teaser.png" /> 
 
 Official PyTorch implementation of paper: [*E<sup>3</sup>Gen: Efficient, Expressive and Editable Avatars Generation*](http://arxiv.org/abs/2405.19203).
-Our new work [Disentangled Clothed Avatar Generation with Layered Representation](https://olivia23333.github.io/LayerAvatar/) is currently on Arxiv, code is coming soon.
+
+<span style="font-size: 10px;">Our new work [Disentangled Clothed Avatar Generation with Layered Representation](https://olivia23333.github.io/LayerAvatar/) is currently on Arxiv, code is coming soon.</span>
 
 ## Getting Started
 
